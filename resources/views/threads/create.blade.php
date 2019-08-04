@@ -37,7 +37,7 @@
                         </div>
 
                         <div class="form-group">
-                            <div class="g-recaptcha" data-sitekey="6LdQbKwUAAAAAMUmlepd_32fVduaOrScUrzBQkzb"></div>
+                            <div class="g-recaptcha" data-sitekey="{{ config('council.recaptcha.key') }}"></div>
                         </div>
 
                         <div class="form-group"><button type="submit" class="btn btn-primary">Publish</button></div>
@@ -49,10 +49,7 @@
                             @endforeach
                         </ul>
                         @endif
-
                     </form>
-
-
                 </div>
             </div>
         </div>
