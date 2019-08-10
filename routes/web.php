@@ -15,12 +15,14 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::redirect('/home', '/threads');
+
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/threads', 'ThreadController@index')->name('threads');
-Route::get('/threads/create', 'ThreadController@create');
+Route::get('/threads/create', 'ThreadController@create')->middleware('must-be-confirmed');
 Route::get('/threads/{channel}/{thread}', 'ThreadController@show');
 Route::get('/threads/search', 'SearchController@show');
 
