@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Reputation;
 
 class Reply extends Model
 {
@@ -20,6 +21,8 @@ class Reply extends Model
 
         static::created(function ($reply) {
             $reply->thread->increment('replies_count');
+            //$reply->owner->increment('reputation', 2);
+            (new Reputation)->award($reply->owner, Reputation::REPLY_POSTED);
         });
 
         static::deleted(function ($reply) {

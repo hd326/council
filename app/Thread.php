@@ -3,6 +3,7 @@
 namespace App;
 
 //use Redis;
+use App\Reputation;
 use App\Visits;
 use App\Reply;
 use App\Events\ThreadReceivedNewReply;
@@ -56,6 +57,9 @@ class Thread extends Model
 
         static::created(function ($thread) {
             $thread->update(['slug' => str_slug($thread->title)]);
+            //$thread->creator->increment('reputation', 10);
+            //$thread->creator->increment('reputation', Reputation::THREAD_WAS_PUBLISHED);
+            (new Reputation)->award($thread->creator, Reputation::THREAD_WAS_PUBLISHED);
         });
     }
 
@@ -206,6 +210,8 @@ class Thread extends Model
     public function markBestReply(Reply $reply)
     {
         $this->update(['best_reply_id' => $reply->id]);
+        //$reply->owner->increment('reputation', 50);
+        (new Reputation)->award($reply->owner, Reputation::BEST_REPLY_AWARDED);
     }
 
     //public function incrementSlug($slug)
