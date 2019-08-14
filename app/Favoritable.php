@@ -28,8 +28,8 @@ trait Favoritable
 
         if (! $this->favorites()->where($attributes)->exists()) {
         // if we don't find any record in the database with existing, then, we create
+        Reputation::award(auth()->user(), Reputation::REPLY_FAVORITED);
         return $this->favorites()->create($attributes);
-
         }
     }
 
@@ -42,6 +42,8 @@ trait Favoritable
         //    $favorite->delete();
         //});
         $this->favorites()->where($attributes)->get()->each->delete();
+
+        Reputation::reduce(auth()->user(), Reputation::REPLY_FAVORITED);
     }
 
     public function isFavorited()

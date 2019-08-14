@@ -6,10 +6,13 @@
                 <h4>
                     {{-- <a href="/threads/{{ $thread->id }}"> --}}
                     <a href="{{ $thread->path() }}">
+                        @if ($thread->pinned)
+                        <span class="glyphicon glyphicon-pushpin" aria-hidden="true"></span>
+                        @endif
                         {{ $thread->title }}
                     </a>
                 </h4>
-                <h5>Posted By: <a href="">{{ $thread->creator->name }}</a></h5>
+                <h5>Posted By: <a href="{{ route('profile', $thread->creator->name) }}">{{ $thread->creator->name }}</a></h5>
             </div>
             <a href="{{ $thread->path() }}"><strong> {{ $thread->replies_count }}
                     {{ str_plural('reply', $thread->replies_count) }}</strong></a>

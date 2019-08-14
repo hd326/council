@@ -24,7 +24,10 @@ class Thread extends Model
 
     protected $appends = ['isSubscribedTo'];
 
-    protected $casts = [ 'locked' => 'boolean'];
+    protected $casts = [ 
+        'locked' => 'boolean',
+        'pinned' => 'boolean'
+    ];
 
     protected static function boot()
     {
@@ -45,6 +48,7 @@ class Thread extends Model
             foreach ($replies as $reply) {
                 $reply->delete();
             }
+            Reputation::reduce($thread->creator, Reputation::THREAD_WAS_PUBLISHED);
             //$thread->replies->each(function($reply){
             //    $reply->delete();
             //});
@@ -59,7 +63,7 @@ class Thread extends Model
             $thread->update(['slug' => str_slug($thread->title)]);
             //$thread->creator->increment('reputation', 10);
             //$thread->creator->increment('reputation', Reputation::THREAD_WAS_PUBLISHED);
-            (new Reputation)->award($thread->creator, Reputation::THREAD_WAS_PUBLISHED);
+            Reputation::award($thread->creator, Reputation::THREAD_WAS_PUBLISHED);
         });
     }
 
@@ -211,7 +215,7 @@ class Thread extends Model
     {
         $this->update(['best_reply_id' => $reply->id]);
         //$reply->owner->increment('reputation', 50);
-        (new Reputation)->award($reply->owner, Reputation::BEST_REPLY_AWARDED);
+        Reputation::award($reply->owner, Reputation::BEST_REPLY_AWARDED);
     }
 
     //public function incrementSlug($slug)

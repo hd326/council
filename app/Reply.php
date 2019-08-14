@@ -22,7 +22,7 @@ class Reply extends Model
         static::created(function ($reply) {
             $reply->thread->increment('replies_count');
             //$reply->owner->increment('reputation', 2);
-            (new Reputation)->award($reply->owner, Reputation::REPLY_POSTED);
+            Reputation::award($reply->owner, Reputation::REPLY_POSTED);
         });
 
         static::deleted(function ($reply) {
@@ -30,7 +30,8 @@ class Reply extends Model
             //    $reply->thread->update(['best_reply_id' => null]);
             //}
             $reply->thread->decrement('replies_count');
-        });
+            Reputation::reduce($reply->owner,  Reputation::REPLY_POSTED);
+        }); 
     }
     
     public function owner()

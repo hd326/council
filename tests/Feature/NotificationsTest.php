@@ -6,6 +6,7 @@ use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Notifications\DatabaseNotification;
 
 class NotificationsTest extends TestCase
 {
@@ -45,9 +46,10 @@ class NotificationsTest extends TestCase
         //    'user_id' => create('App\User')->id,
         //    'body' => 'Some reply here'
         //]);
-        $user = auth()->user();
-        $response = $this->getJson("/profiles/{$user->name}/notifications")->json();
-        $this->assertCount(1, $response);
+        $this->assertCount(
+            1,
+            $this->getJson("/profiles/" . auth()->user()->name . "/notifications")->json()
+        );
     }
 
     /** @test */

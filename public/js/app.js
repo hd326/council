@@ -51285,7 +51285,8 @@ if (token) {
 }
 
 window.events = new Vue(); // vue.$on
-
+//how is window.flash now a Vue object?
+//with->('flash', 'message') - mixing PHP with JS?
 window.flash = function (message) {
     window.events.$emit('flash', message);
 }; // flash('my new flash message');
@@ -89502,6 +89503,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             //locked: this.dataLocked
             repliesCount: this.thread.replies_count,
             locked: this.thread.locked,
+            pinned: this.thread.pinned,
             title: this.thread.title,
             body: this.thread.body,
             form: {
@@ -89519,6 +89521,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             axios[this.locked ? 'delete' : 'post'](uri);
 
             this.locked = !this.locked;
+        },
+        togglePin: function togglePin() {
+            var uri = '/pinned-threads/' + this.thread.slug;
+            axios[this.pinned ? 'delete' : 'post'](uri);
+
+            this.pinned = !this.pinned;
         },
         update: function update() {
             var _this = this;
@@ -89539,6 +89547,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 body: this.thread.body
             };
             this.editing = false;
+        },
+        classes: function classes(target) {
+            return ['btn', target ? 'btn-primary' : 'btn-default'];
         }
     }
 });
@@ -92637,6 +92648,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 
 
@@ -92803,7 +92817,15 @@ var render = function() {
         attrs: { src: _vm.avatar, width: "50", height: "50" }
       }),
       _vm._v(" "),
-      _c("h1", { domProps: { textContent: _vm._s(_vm.user.name) } })
+      _c("h1", [
+        _vm._v(
+          "\r\n                    " +
+            _vm._s(_vm.user.name) +
+            "\r\n                    "
+        ),
+        _c("small", { domProps: { textContent: _vm._s(_vm.user.reputation) } }),
+        _c("small", [_vm._v("XP")])
+      ])
     ]),
     _vm._v(" "),
     _vm.canUpdate
@@ -92989,11 +93011,12 @@ if (false) {
 /* 595 */
 /***/ (function(module, exports, __webpack_require__) {
 
+var disposed = false
 var normalizeComponent = __webpack_require__(4)
 /* script */
-var __vue_script__ = null
+var __vue_script__ = __webpack_require__(596)
 /* template */
-var __vue_template__ = null
+var __vue_template__ = __webpack_require__(597)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -93012,12 +93035,68 @@ var Component = normalizeComponent(
 )
 Component.options.__file = "resources/assets/js/components/HtmlRenderer.vue"
 
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-7fe66c45", Component.options)
+  } else {
+    hotAPI.reload("data-v-7fe66c45", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
 module.exports = Component.exports
 
 
 /***/ }),
-/* 596 */,
-/* 597 */,
+/* 596 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: {
+    toRender: {
+      type: String,
+      required: true
+    }
+  }
+});
+
+/***/ }),
+/* 597 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("span", { domProps: { innerHTML: _vm._s(this.toRender) } })
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-7fe66c45", module.exports)
+  }
+}
+
+/***/ }),
 /* 598 */
 /***/ (function(module, exports) {
 

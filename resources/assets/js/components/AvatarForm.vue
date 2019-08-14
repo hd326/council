@@ -3,8 +3,11 @@
 
     <div class="level">
             <img :src="avatar" width="50" height="50" class="mr-1">
-                <h1 v-text="user.name">
+                <h1>
+                    {{ user.name }}
+                    <small v-text="user.reputation"></small><small>XP</small>
                 </h1>
+
     </div>
    
 

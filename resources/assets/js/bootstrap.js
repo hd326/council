@@ -41,7 +41,8 @@ if (token) {
 
 
 window.events = new Vue(); // vue.$on
-
+//how is window.flash now a Vue object?
+//with->('flash', 'message') - mixing PHP with JS?
 window.flash = function (message) {
     window.events.$emit('flash', message);
 }; // flash('my new flash message');

@@ -14,6 +14,7 @@ import SubscribeButton from '../components/SubscribeButton.vue';
                 //locked: this.dataLocked
                 repliesCount: this.thread.replies_count,
                 locked: this.thread.locked,
+                pinned: this.thread.pinned,
                 title: this.thread.title,
                 body: this.thread.body,
                 form: {
@@ -30,6 +31,13 @@ import SubscribeButton from '../components/SubscribeButton.vue';
                 axios[this.locked ? 'delete' : 'post'](uri);
                 
                 this.locked = ! this.locked;
+            },
+
+            togglePin () {
+                let uri = `/pinned-threads/` + this.thread.slug;
+                axios[this.pinned ? 'delete' : 'post'](uri);
+                
+                this.pinned = ! this.pinned;
             },
 
             update () {
@@ -50,6 +58,13 @@ import SubscribeButton from '../components/SubscribeButton.vue';
                     body:this.thread.body,
                 };
                 this.editing = false;
+            },
+
+            classes(target){
+                return [
+                    'btn',
+                    target ? 'btn-primary' : 'btn-default'
+                ];
             }
             
         }

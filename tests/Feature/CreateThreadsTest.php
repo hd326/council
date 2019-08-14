@@ -45,12 +45,11 @@ class CreateThreadsTest extends TestCase
     public function an_authenticated_user_can_create_new_forum_threads()
     {
         // Given we have a signed in user
-        $this->actingAs(factory('App\User')->create());
-        // $this->signIn();
-        
-        $thread = factory('App\Thread')->make();
+        // $this->actingAs(factory('App\User')->create());
+        $this->signIn();
+        $thread = make('App\Thread', $overrides);
         // When we hit the endpoint to create a new thread
-        $response = $this->post('/threads', $thread->toArray());
+        return $this->post(route('threads'), $thread->toArray());
 
         // posting information to this endpoint with the data in store
 
@@ -171,7 +170,7 @@ class CreateThreadsTest extends TestCase
 
         $thread = make('App\Thread', $overrides);
 
-        return $this->post('/threads', $thread->toArray());
+        return $this->post(route('threads'), $thread->toArray());
             //->assertSessionHasErrors('title');
     }
 }
