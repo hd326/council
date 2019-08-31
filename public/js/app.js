@@ -88990,7 +88990,7 @@ exports = module.exports = __webpack_require__(558)(false);
 
 
 // module
-exports.push([module.i, "\n.alert-flash {\n    position: fixed;\n    right: 25px;\n    bottom: 25px;\n}\n", ""]);
+exports.push([module.i, "\n.alert-flash {\n  position: fixed;\n  right: 25px;\n  bottom: 25px;\n}\n", ""]);
 
 // exports
 
@@ -91550,7 +91550,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['reply'],
 
-    components: { Favorite: __WEBPACK_IMPORTED_MODULE_0__Favorite_vue___default.a },
+    components: {
+        Favorite: __WEBPACK_IMPORTED_MODULE_0__Favorite_vue___default.a
+    },
 
     data: function data() {
         return {
@@ -91666,11 +91668,7 @@ var render = function() {
       attrs: { type: "submit" },
       on: { click: _vm.toggle }
     },
-    [
-      _c("span", { staticClass: "glyphicon glyphicon-heart" }),
-      _vm._v(" "),
-      _c("span", { domProps: { textContent: _vm._s(_vm.favoritesCount) } })
-    ]
+    [_c("span", { domProps: { textContent: _vm._s(_vm.favoritesCount) } })]
   )
 }
 var staticRenderFns = []
@@ -91982,7 +91980,7 @@ var render = function() {
               attrs: { href: "/profiles/" + _vm.reply.owner.name },
               domProps: { textContent: _vm._s(_vm.reply.owner.name) }
             }),
-            _vm._v(" said "),
+            _vm._v(" said "),
             _c("span", { domProps: { textContent: _vm._s(_vm.ago) } })
           ]),
           _vm._v(" "),
@@ -92650,19 +92648,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['user'],
 
-    components: { ImageUpload: __WEBPACK_IMPORTED_MODULE_0__ImageUpload_vue___default.a },
+    components: {
+        ImageUpload: __WEBPACK_IMPORTED_MODULE_0__ImageUpload_vue___default.a
+    },
 
     data: function data() {
         return {
-            avatar: '/storage/' + this.user.avatar_path
+            //avatar: '/storage/' + this.user.avatar_path,
+            avatar: this.user.avatar_path
         };
     },
 
@@ -92768,11 +92767,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             reader.onload = function (e) {
                 //console.log(e);
                 var src = e.target.result;
-                _this.$emit('loaded', {
-                    src: e.target.result,
-                    file: avatar
-                });
-                //this.$emit('loaded', { src, avatar });
+                //this.$emit('loaded', {
+                //    src: e.target.result,
+                //    file: avatar
+                //});
+                _this.$emit('loaded', { src: src, avatar: avatar });
                 //this.avatar = e.target.result;
             };
         }
@@ -92812,17 +92811,8 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", [
     _c("div", { staticClass: "level" }, [
-      _c("img", {
-        staticClass: "mr-1",
-        attrs: { src: _vm.avatar, width: "50", height: "50" }
-      }),
-      _vm._v(" "),
       _c("h1", [
-        _vm._v(
-          "\r\n                    " +
-            _vm._s(_vm.user.name) +
-            "\r\n                    "
-        ),
+        _vm._v("\n            " + _vm._s(_vm.user.name) + "\n            "),
         _c("small", { domProps: { textContent: _vm._s(_vm.user.reputation) } }),
         _c("small", [_vm._v("XP")])
       ])

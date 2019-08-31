@@ -3,9 +3,8 @@
         <div class="panel-heading">
             <div class="level">
                 <h5 class="flex">
-                    <a :href="'/profiles/'+reply.owner.name" 
-                        v-text="reply.owner.name">
-                    </a> said <span v-text="ago"></span> 
+                    <a :href="'/profiles/'+reply.owner.name" v-text="reply.owner.name">
+                    </a>&nbsp;said&nbsp;<span v-text=" ago"></span>
                 </h5>
 
                 <!--@if (Auth::check())
@@ -21,7 +20,7 @@
                 @endif-->
 
                 <div v-if="signedIn">
-                <favorite :reply="reply"></favorite>
+                    <favorite :reply="reply"></favorite>
                 </div>
             </div>
         </div>
@@ -29,10 +28,10 @@
         <div class="panel-body">
             <div v-if="editing">
                 <form @submit="update">
-                <!--<textarea class="form-control" v-model="body" required></textarea>-->
-                <wysiwyg v-model="body"></wysiwyg>
-                <button class="btn btn-xs btn-link">Update</button>
-                <button class="btn btn-xs btn-link" @click="editing = false" type="button">Cancel</button>
+                    <!--<textarea class="form-control" v-model="body" required></textarea>-->
+                    <wysiwyg v-model="body"></wysiwyg>
+                    <button class="btn btn-xs btn-link">Update</button>
+                    <button class="btn btn-xs btn-link" @click="editing = false" type="button">Cancel</button>
                 </form>
             </div>
             <div v-else v-html="body">
@@ -46,10 +45,11 @@
         <div class="panel-footer level" v-if="authorize('owns', reply) || authorize('owns', reply.thread)">
             <!--<div v-if="canUpdate">-->
             <div v-if="authorize('owns', reply)">
-            <button class="btn btn-xs mr-1" @click="editing = true">Edit</button>
-            <button class="btn btn-xs btn-danger mr-1" @click="destroy">Delete</button>
+                <button class="btn btn-xs mr-1" @click="editing = true">Edit</button>
+                <button class="btn btn-xs btn-danger mr-1" @click="destroy">Delete</button>
             </div>
-            <button class="btn btn-xs btn-default ml-a" @click="markBestReply" v-if="authorize('updateThread', reply.thread)">Best Reply?</button>
+            <button class="btn btn-xs btn-default ml-a" @click="markBestReply"
+                v-if="authorize('updateThread', reply.thread)">Best Reply?</button>
             <!--<form method="POST" action="/replies/{{$reply->id}}">
                 {{ csrf_field() }}
                 {{ method_field('DELETE') }}
@@ -62,13 +62,15 @@
 </template>
 
 <script>
-import Favorite from './Favorite.vue';
-import moment from 'moment';
+    import Favorite from './Favorite.vue';
+    import moment from 'moment';
 
     export default {
         props: ['reply'],
 
-        components: { Favorite }, 
+        components: {
+            Favorite
+        },
 
         data() {
             return {
@@ -84,7 +86,7 @@ import moment from 'moment';
             ago() {
                 return moment.utc(this.reply.created_at).fromNow() + '...';
             },
-            
+
             //signedIn () {
             //    return window.App.signedIn
             //},
@@ -105,13 +107,13 @@ import moment from 'moment';
         methods: {
             update() {
                 axios.patch(
-                    '/replies/' + this.reply.id, {
-                    body: this.body
-                })
-                .catch(error => {
-                    flash(error.response.data, 'danger');
-                });
-        //whats up with this update method
+                        '/replies/' + this.reply.id, {
+                            body: this.body
+                        })
+                    .catch(error => {
+                        flash(error.response.data, 'danger');
+                    });
+                //whats up with this update method
                 this.editing = false;
 
                 flash('Updated!');

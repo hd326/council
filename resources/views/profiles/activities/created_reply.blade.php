@@ -8,7 +8,7 @@
                 {{--@if ($activity->type == 'created_reply')
                     {{ $profileUser->name }} replied to thread
                 @endif--}}
-                {{ $profileUser->name }} replied to
+                {{ $profileUser->name }} replied to &nbsp;
                 <a href="{{ $activity->activitiable->thread->path() }}">"{{ $activity->activitiable->thread->title }}"</a>
                 {{--<a href="{{ route('profile', $thread->creator )}}">{{ $thread->creator->name }}</a> posted: --}}
                 {{--<a href="{{ $thread->path() }}">{{ $thread->title }}</a> --}}

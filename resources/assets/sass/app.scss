@@ -1,4 +1,10 @@
 
+@import "./node_modules/tailwindcss/base";
+
+@import "./node_modules/tailwindcss/components";
+
+@import "./node_modules/tailwindcss/utilities";
+
 // Fonts
 @import url("https://fonts.googleapis.com/css?family=Raleway:300,400,600");
 
@@ -7,3 +13,6 @@
 
 // Bootstrap
 @import "~bootstrap-sass/assets/stylesheets/bootstrap";
+
+
+

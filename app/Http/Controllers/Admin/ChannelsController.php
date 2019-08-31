@@ -1,5 +1,5 @@
 <?php
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use App\Channel;
 use Illuminate\Validation\Rule;
@@ -10,7 +10,6 @@ class ChannelsController extends Controller
     public function index(Channel $channel)
     {
         $channels = Channel::withArchived()->with('threads')->get();
-        //$channels = Channel::withoutGlobalScopes()->orderBy('name', 'asc')->with('threads')->get();
         return view('admin.channels.index', compact('channels'));
     }
 

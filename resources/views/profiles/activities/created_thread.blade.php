@@ -5,7 +5,7 @@
                     {{--@if ($activity->type == 'created_thread')
                         {{ $profileUser->name }} published a thread
                     @endif--}}
-                {{ $profileUser->name }} published <a href="{{ $activity->activitiable->path() }}">{{ $activity->activitiable->title }}</a>
+                {{ $profileUser->name }} published &nbsp; <a href="{{ $activity->activitiable->path() }}">{{ $activity->activitiable->title }}</a>
                     {{--@if ($activity->type == 'created_reply')
                         {{ $profileUser->name }} replied to thread
                     @endif--}}

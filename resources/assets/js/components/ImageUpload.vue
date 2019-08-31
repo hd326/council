@@ -14,11 +14,11 @@ export default {
         reader.onload = e => {
             //console.log(e);
             let src = e.target.result;
-            this.$emit('loaded', {
-                src: e.target.result,
-                file: avatar
-            });
-            //this.$emit('loaded', { src, avatar });
+            //this.$emit('loaded', {
+            //    src: e.target.result,
+            //    file: avatar
+            //});
+            this.$emit('loaded', { src, avatar });
             //this.avatar = e.target.result;
         };
         }

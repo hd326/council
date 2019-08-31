@@ -8,6 +8,8 @@
 window.Vue = require('vue');
 require('./bootstrap');
 
+
+
 let authorizations = require('./authorizations');
 
 Vue.prototype.authorize = function (...params) {

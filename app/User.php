@@ -78,5 +78,5 @@ class User extends Authenticatable
         //    return 'avatars/default.jpg';
         //}
         //return $this->avatar_path;
-    }
+    } 
 }

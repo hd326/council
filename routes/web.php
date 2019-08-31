@@ -70,18 +70,26 @@ Route::get('/register/confirm', 'Api\RegisterConfirmationController@index');
 
 Route::get('api/users', 'Api\UsersController@index');
 Route::post('api/users/{user}/avatar', 'Api\UserAvatarController@store')->name('avatar'); //->middleware('auth'); instead of in controller
+Route::get('api/channels', 'Api\ChannelsController@index');
 
 
+Route::group([
+    'prefix' => 'admin',
+    'middleware' => 'admin',
+    'namespace' => 'Admin'
+], function () {
+    Route::get('', 'DashboardController@index')->name('admin.dashboard.index');
+    Route::post('channels', 'ChannelsController@store')->name('admin.channels.store');
+    Route::get('channels', 'ChannelsController@index')->name('admin.channels.index');
+    Route::get('channels/create', 'ChannelsController@create')->name('admin.channels.create');
+    Route::get('channels/{channel}/edit', 'ChannelsController@edit')->name('admin.channels.edit');
+    Route::patch('channels/{channel}', 'ChannelsController@update')->name('admin.channels.update');
+});
 
-//Route::get('', 'DashboardController@index')->name('admin.dashboard.index');
-Route::post('channels', 'ChannelsController@store')->name('admin.channels.store');
-Route::get('channels', 'ChannelsController@index')->name('admin.channels.index');
-Route::get('channels/create', 'ChannelsController@create')->name('admin.channels.create');
-Route::get('channels/{channel}/edit', 'ChannelsController@edit')->name('admin.channels.edit');
-Route::patch('channels/{channel}', 'ChannelsController@update')->name('admin.channels.update');
-
-//Route::get('/channels/{channel}/edit', 'ChannelsController@edit')->name('admin.channels.edit');
-//Route::patch('/channels/{channel}', 'ChannelsController@update')->name('admin.channels.update');
-
-
+    Route::get('', 'DashboardController@index')->name('admin.dashboard.index');
+    Route::post('channels', 'ChannelsController@store')->name('admin.channels.store')->middleware('admin');
+    Route::get('channels', 'ChannelsController@index')->name('admin.channels.index')->middleware('admin');
+    Route::get('channels/create', 'ChannelsController@create')->name('admin.channels.create')->middleware('admin');
+    Route::get('channels/{channel}/edit', 'ChannelsController@edit')->name('admin.channels.edit')->middleware('admin');
+    Route::patch('channels/{channel}', 'ChannelsController@update')->name('admin.channels.update')->middleware('admin');
 
