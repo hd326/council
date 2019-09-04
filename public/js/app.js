@@ -4810,115 +4810,6 @@ module.exports = root;
 /* 4 */
 /***/ (function(module, exports) {
 
-/* globals __VUE_SSR_CONTEXT__ */
-
-// IMPORTANT: Do NOT use ES2015 features in this file.
-// This module is a runtime utility for cleaner component module output and will
-// be included in the final webpack user bundle.
-
-module.exports = function normalizeComponent (
-  rawScriptExports,
-  compiledTemplate,
-  functionalTemplate,
-  injectStyles,
-  scopeId,
-  moduleIdentifier /* server only */
-) {
-  var esModule
-  var scriptExports = rawScriptExports = rawScriptExports || {}
-
-  // ES6 modules interop
-  var type = typeof rawScriptExports.default
-  if (type === 'object' || type === 'function') {
-    esModule = rawScriptExports
-    scriptExports = rawScriptExports.default
-  }
-
-  // Vue.extend constructor export interop
-  var options = typeof scriptExports === 'function'
-    ? scriptExports.options
-    : scriptExports
-
-  // render functions
-  if (compiledTemplate) {
-    options.render = compiledTemplate.render
-    options.staticRenderFns = compiledTemplate.staticRenderFns
-    options._compiled = true
-  }
-
-  // functional template
-  if (functionalTemplate) {
-    options.functional = true
-  }
-
-  // scopedId
-  if (scopeId) {
-    options._scopeId = scopeId
-  }
-
-  var hook
-  if (moduleIdentifier) { // server build
-    hook = function (context) {
-      // 2.3 injection
-      context =
-        context || // cached call
-        (this.$vnode && this.$vnode.ssrContext) || // stateful
-        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional
-      // 2.2 with runInNewContext: true
-      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
-        context = __VUE_SSR_CONTEXT__
-      }
-      // inject component styles
-      if (injectStyles) {
-        injectStyles.call(this, context)
-      }
-      // register component module identifier for async chunk inferrence
-      if (context && context._registeredComponents) {
-        context._registeredComponents.add(moduleIdentifier)
-      }
-    }
-    // used by ssr in case component is cached and beforeCreate
-    // never gets called
-    options._ssrRegister = hook
-  } else if (injectStyles) {
-    hook = injectStyles
-  }
-
-  if (hook) {
-    var functional = options.functional
-    var existing = functional
-      ? options.render
-      : options.beforeCreate
-
-    if (!functional) {
-      // inject component registration as beforeCreate hook
-      options.beforeCreate = existing
-        ? [].concat(existing, hook)
-        : [hook]
-    } else {
-      // for template-only hot-reload because in that case the render fn doesn't
-      // go through the normalizer
-      options._injectStyles = hook
-      // register for functioal component in vue file
-      options.render = function renderWithStyleInjection (h, context) {
-        hook.call(context)
-        return existing(h, context)
-      }
-    }
-  }
-
-  return {
-    esModule: esModule,
-    exports: scriptExports,
-    options: options
-  }
-}
-
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports) {
-
 /**
  * Checks if `value` is object-like. A value is object-like if it's not `null`
  * and has a `typeof` result of "object".
@@ -4951,7 +4842,7 @@ module.exports = isObjectLike;
 
 
 /***/ }),
-/* 6 */
+/* 5 */
 /***/ (function(module, exports) {
 
 /**
@@ -4988,7 +4879,7 @@ module.exports = isObject;
 
 
 /***/ }),
-/* 7 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5295,6 +5186,115 @@ module.exports = {
   extend: extend,
   trim: trim
 };
+
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports) {
+
+/* globals __VUE_SSR_CONTEXT__ */
+
+// IMPORTANT: Do NOT use ES2015 features in this file.
+// This module is a runtime utility for cleaner component module output and will
+// be included in the final webpack user bundle.
+
+module.exports = function normalizeComponent (
+  rawScriptExports,
+  compiledTemplate,
+  functionalTemplate,
+  injectStyles,
+  scopeId,
+  moduleIdentifier /* server only */
+) {
+  var esModule
+  var scriptExports = rawScriptExports = rawScriptExports || {}
+
+  // ES6 modules interop
+  var type = typeof rawScriptExports.default
+  if (type === 'object' || type === 'function') {
+    esModule = rawScriptExports
+    scriptExports = rawScriptExports.default
+  }
+
+  // Vue.extend constructor export interop
+  var options = typeof scriptExports === 'function'
+    ? scriptExports.options
+    : scriptExports
+
+  // render functions
+  if (compiledTemplate) {
+    options.render = compiledTemplate.render
+    options.staticRenderFns = compiledTemplate.staticRenderFns
+    options._compiled = true
+  }
+
+  // functional template
+  if (functionalTemplate) {
+    options.functional = true
+  }
+
+  // scopedId
+  if (scopeId) {
+    options._scopeId = scopeId
+  }
+
+  var hook
+  if (moduleIdentifier) { // server build
+    hook = function (context) {
+      // 2.3 injection
+      context =
+        context || // cached call
+        (this.$vnode && this.$vnode.ssrContext) || // stateful
+        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional
+      // 2.2 with runInNewContext: true
+      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
+        context = __VUE_SSR_CONTEXT__
+      }
+      // inject component styles
+      if (injectStyles) {
+        injectStyles.call(this, context)
+      }
+      // register component module identifier for async chunk inferrence
+      if (context && context._registeredComponents) {
+        context._registeredComponents.add(moduleIdentifier)
+      }
+    }
+    // used by ssr in case component is cached and beforeCreate
+    // never gets called
+    options._ssrRegister = hook
+  } else if (injectStyles) {
+    hook = injectStyles
+  }
+
+  if (hook) {
+    var functional = options.functional
+    var existing = functional
+      ? options.render
+      : options.beforeCreate
+
+    if (!functional) {
+      // inject component registration as beforeCreate hook
+      options.beforeCreate = existing
+        ? [].concat(existing, hook)
+        : [hook]
+    } else {
+      // for template-only hot-reload because in that case the render fn doesn't
+      // go through the normalizer
+      options._injectStyles = hook
+      // register for functioal component in vue file
+      options.render = function renderWithStyleInjection (h, context) {
+        hook.call(context)
+        return existing(h, context)
+      }
+    }
+  }
+
+  return {
+    esModule: esModule,
+    exports: scriptExports,
+    options: options
+  }
+}
 
 
 /***/ }),
@@ -5673,7 +5673,7 @@ module.exports = Symbol;
 /***/ (function(module, exports, __webpack_require__) {
 
 var baseGetTag = __webpack_require__(11),
-    isObject = __webpack_require__(6);
+    isObject = __webpack_require__(5);
 
 /** `Object#toString` result references. */
 var asyncTag = '[object AsyncFunction]',
@@ -6019,7 +6019,7 @@ module.exports = function(module) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var baseIsArguments = __webpack_require__(373),
-    isObjectLike = __webpack_require__(5);
+    isObjectLike = __webpack_require__(4);
 
 /** Used for built-in method references. */
 var objectProto = Object.prototype;
@@ -6269,7 +6269,7 @@ module.exports = getTag;
 /***/ (function(module, exports, __webpack_require__) {
 
 var baseGetTag = __webpack_require__(11),
-    isObjectLike = __webpack_require__(5);
+    isObjectLike = __webpack_require__(4);
 
 /** `Object#toString` result references. */
 var symbolTag = '[object Symbol]';
@@ -6556,7 +6556,7 @@ module.exports = isEmpty;
 
 var baseGetTag = __webpack_require__(11),
     isArray = __webpack_require__(2),
-    isObjectLike = __webpack_require__(5);
+    isObjectLike = __webpack_require__(4);
 
 /** `Object#toString` result references. */
 var stringTag = '[object String]';
@@ -6876,7 +6876,7 @@ module.exports = copyArray;
 /* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var isObject = __webpack_require__(6);
+var isObject = __webpack_require__(5);
 
 /** Built-in value references. */
 var objectCreate = Object.create;
@@ -7009,7 +7009,7 @@ module.exports = find;
 /***/ (function(module, exports, __webpack_require__) {
 
 var baseCreate = __webpack_require__(53),
-    isObject = __webpack_require__(6);
+    isObject = __webpack_require__(5);
 
 /**
  * Creates a function that produces an instance of `Ctor` regardless of
@@ -9879,7 +9879,7 @@ module.exports = filter;
 /***/ (function(module, exports, __webpack_require__) {
 
 var baseIsEqualDeep = __webpack_require__(420),
-    isObjectLike = __webpack_require__(5);
+    isObjectLike = __webpack_require__(4);
 
 /**
  * The base implementation of `_.isEqual` which supports partial comparisons
@@ -10179,7 +10179,7 @@ module.exports = cloneArrayBuffer;
 
 var baseGetTag = __webpack_require__(11),
     getPrototype = __webpack_require__(76),
-    isObjectLike = __webpack_require__(5);
+    isObjectLike = __webpack_require__(4);
 
 /** `Object#toString` result references. */
 var objectTag = '[object Object]';
@@ -21805,7 +21805,7 @@ return jQuery;
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process) {
 
-var utils = __webpack_require__(7);
+var utils = __webpack_require__(6);
 var normalizeHeaderName = __webpack_require__(539);
 
 var DEFAULT_CONTENT_TYPE = {
@@ -23611,7 +23611,7 @@ module.exports = shortOut;
 /***/ (function(module, exports, __webpack_require__) {
 
 var isArrayLike = __webpack_require__(10),
-    isObjectLike = __webpack_require__(5);
+    isObjectLike = __webpack_require__(4);
 
 /**
  * This method is like `_.isArrayLike` except that it also checks if `value`
@@ -23913,7 +23913,7 @@ module.exports = WeakMap;
 /* 129 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var isObject = __webpack_require__(6);
+var isObject = __webpack_require__(5);
 
 /**
  * Checks if `value` is suitable for strict equality comparisons, i.e. `===`.
@@ -24363,7 +24363,7 @@ module.exports = flatten;
 /***/ (function(module, exports, __webpack_require__) {
 
 var baseGetTag = __webpack_require__(11),
-    isObjectLike = __webpack_require__(5);
+    isObjectLike = __webpack_require__(4);
 
 /** `Object#toString` result references. */
 var numberTag = '[object Number]';
@@ -24553,7 +24553,7 @@ module.exports = trim;
 var eq = __webpack_require__(19),
     isArrayLike = __webpack_require__(10),
     isIndex = __webpack_require__(30),
-    isObject = __webpack_require__(6);
+    isObject = __webpack_require__(5);
 
 /**
  * Checks if the given arguments are from an iteratee call.
@@ -26351,7 +26351,7 @@ module.exports = function bind(fn, thisArg) {
 "use strict";
 
 
-var utils = __webpack_require__(7);
+var utils = __webpack_require__(6);
 var settle = __webpack_require__(540);
 var buildURL = __webpack_require__(542);
 var parseHeaders = __webpack_require__(543);
@@ -26599,7 +26599,7 @@ module.exports = Cancel;
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(4)
+var normalizeComponent = __webpack_require__(7)
 /* script */
 var __vue_script__ = __webpack_require__(565)
 /* template */
@@ -26646,7 +26646,7 @@ module.exports = Component.exports
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(4)
+var normalizeComponent = __webpack_require__(7)
 /* script */
 var __vue_script__ = __webpack_require__(566)
 /* template */
@@ -26693,7 +26693,7 @@ module.exports = Component.exports
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(4)
+var normalizeComponent = __webpack_require__(7)
 /* script */
 var __vue_script__ = __webpack_require__(570)
 /* template */
@@ -26740,7 +26740,7 @@ module.exports = Component.exports
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(4)
+var normalizeComponent = __webpack_require__(7)
 /* script */
 var __vue_script__ = __webpack_require__(571)
 /* template */
@@ -38985,7 +38985,7 @@ module.exports = Component.exports
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(4)
+var normalizeComponent = __webpack_require__(7)
 /* script */
 var __vue_script__ = __webpack_require__(576)
 /* template */
@@ -39032,7 +39032,7 @@ module.exports = Component.exports
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(313);
-module.exports = __webpack_require__(598);
+module.exports = __webpack_require__(595);
 
 
 /***/ }),
@@ -39091,7 +39091,6 @@ Vue.component('subscribe-button', __webpack_require__(311));
 Vue.component('user-notifications', __webpack_require__(581));
 Vue.component('avatar-form', __webpack_require__(584));
 Vue.component('wysiwyg', __webpack_require__(590));
-Vue.component('html-renderer', __webpack_require__(595));
 
 var app = new Vue({
     el: '#app'
@@ -77695,7 +77694,7 @@ module.exports = baseTimes;
 /***/ (function(module, exports, __webpack_require__) {
 
 var baseGetTag = __webpack_require__(11),
-    isObjectLike = __webpack_require__(5);
+    isObjectLike = __webpack_require__(4);
 
 /** `Object#toString` result references. */
 var argsTag = '[object Arguments]';
@@ -77824,7 +77823,7 @@ module.exports = stubFalse;
 
 var baseGetTag = __webpack_require__(11),
     isLength = __webpack_require__(61),
-    isObjectLike = __webpack_require__(5);
+    isObjectLike = __webpack_require__(4);
 
 /** `Object#toString` result references. */
 var argsTag = '[object Arguments]',
@@ -78104,7 +78103,7 @@ module.exports = hashClear;
 
 var isFunction = __webpack_require__(18),
     isMasked = __webpack_require__(385),
-    isObject = __webpack_require__(6),
+    isObject = __webpack_require__(5),
     toSource = __webpack_require__(111);
 
 /**
@@ -79966,7 +79965,7 @@ var Stack = __webpack_require__(50),
     isArray = __webpack_require__(2),
     isBuffer = __webpack_require__(29),
     isMap = __webpack_require__(453),
-    isObject = __webpack_require__(6),
+    isObject = __webpack_require__(5),
     isSet = __webpack_require__(455),
     keys = __webpack_require__(9);
 
@@ -80171,7 +80170,7 @@ module.exports = baseAssignIn;
 /* 444 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var isObject = __webpack_require__(6),
+var isObject = __webpack_require__(5),
     isPrototype = __webpack_require__(44),
     nativeKeysIn = __webpack_require__(445);
 
@@ -80498,7 +80497,7 @@ module.exports = isMap;
 /***/ (function(module, exports, __webpack_require__) {
 
 var getTag = __webpack_require__(34),
-    isObjectLike = __webpack_require__(5);
+    isObjectLike = __webpack_require__(4);
 
 /** `Object#toString` result references. */
 var mapTag = '[object Map]';
@@ -80555,7 +80554,7 @@ module.exports = isSet;
 /***/ (function(module, exports, __webpack_require__) {
 
 var getTag = __webpack_require__(34),
-    isObjectLike = __webpack_require__(5);
+    isObjectLike = __webpack_require__(4);
 
 /** `Object#toString` result references. */
 var setTag = '[object Set]';
@@ -80766,7 +80765,7 @@ module.exports = toFinite;
 /* 463 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var isObject = __webpack_require__(6),
+var isObject = __webpack_require__(5),
     isSymbol = __webpack_require__(35);
 
 /** Used as references for various `Number` constants. */
@@ -81153,7 +81152,7 @@ var Stack = __webpack_require__(50),
     assignMergeValue = __webpack_require__(148),
     baseFor = __webpack_require__(120),
     baseMergeDeep = __webpack_require__(475),
-    isObject = __webpack_require__(6),
+    isObject = __webpack_require__(5),
     keysIn = __webpack_require__(38),
     safeGet = __webpack_require__(149);
 
@@ -81207,7 +81206,7 @@ var assignMergeValue = __webpack_require__(148),
     isArrayLikeObject = __webpack_require__(119),
     isBuffer = __webpack_require__(29),
     isFunction = __webpack_require__(18),
-    isObject = __webpack_require__(6),
+    isObject = __webpack_require__(5),
     isPlainObject = __webpack_require__(79),
     isTypedArray = __webpack_require__(43),
     safeGet = __webpack_require__(149),
@@ -82305,7 +82304,7 @@ var LazyWrapper = __webpack_require__(83),
     LodashWrapper = __webpack_require__(159),
     baseLodash = __webpack_require__(84),
     isArray = __webpack_require__(2),
-    isObjectLike = __webpack_require__(5),
+    isObjectLike = __webpack_require__(4),
     wrapperClone = __webpack_require__(500);
 
 /** Used for built-in method references. */
@@ -83073,7 +83072,7 @@ module.exports = pickBy;
 var assignValue = __webpack_require__(75),
     castPath = __webpack_require__(22),
     isIndex = __webpack_require__(30),
-    isObject = __webpack_require__(6),
+    isObject = __webpack_require__(5),
     toKey = __webpack_require__(23);
 
 /**
@@ -88004,7 +88003,7 @@ module.exports = __webpack_require__(536);
 "use strict";
 
 
-var utils = __webpack_require__(7);
+var utils = __webpack_require__(6);
 var bind = __webpack_require__(175);
 var Axios = __webpack_require__(538);
 var defaults = __webpack_require__(88);
@@ -88091,7 +88090,7 @@ function isSlowBuffer (obj) {
 
 
 var defaults = __webpack_require__(88);
-var utils = __webpack_require__(7);
+var utils = __webpack_require__(6);
 var InterceptorManager = __webpack_require__(547);
 var dispatchRequest = __webpack_require__(548);
 
@@ -88176,7 +88175,7 @@ module.exports = Axios;
 "use strict";
 
 
-var utils = __webpack_require__(7);
+var utils = __webpack_require__(6);
 
 module.exports = function normalizeHeaderName(headers, normalizedName) {
   utils.forEach(headers, function processHeader(value, name) {
@@ -88256,7 +88255,7 @@ module.exports = function enhanceError(error, config, code, request, response) {
 "use strict";
 
 
-var utils = __webpack_require__(7);
+var utils = __webpack_require__(6);
 
 function encode(val) {
   return encodeURIComponent(val).
@@ -88331,7 +88330,7 @@ module.exports = function buildURL(url, params, paramsSerializer) {
 "use strict";
 
 
-var utils = __webpack_require__(7);
+var utils = __webpack_require__(6);
 
 // Headers whose duplicates are ignored by node
 // c.f. https://nodejs.org/api/http.html#http_message_headers
@@ -88391,7 +88390,7 @@ module.exports = function parseHeaders(headers) {
 "use strict";
 
 
-var utils = __webpack_require__(7);
+var utils = __webpack_require__(6);
 
 module.exports = (
   utils.isStandardBrowserEnv() ?
@@ -88509,7 +88508,7 @@ module.exports = btoa;
 "use strict";
 
 
-var utils = __webpack_require__(7);
+var utils = __webpack_require__(6);
 
 module.exports = (
   utils.isStandardBrowserEnv() ?
@@ -88569,7 +88568,7 @@ module.exports = (
 "use strict";
 
 
-var utils = __webpack_require__(7);
+var utils = __webpack_require__(6);
 
 function InterceptorManager() {
   this.handlers = [];
@@ -88628,7 +88627,7 @@ module.exports = InterceptorManager;
 "use strict";
 
 
-var utils = __webpack_require__(7);
+var utils = __webpack_require__(6);
 var transformData = __webpack_require__(549);
 var isCancel = __webpack_require__(178);
 var defaults = __webpack_require__(88);
@@ -88721,7 +88720,7 @@ module.exports = function dispatchRequest(config) {
 "use strict";
 
 
-var utils = __webpack_require__(7);
+var utils = __webpack_require__(6);
 
 /**
  * Transform the data for a request or a response
@@ -88913,7 +88912,7 @@ function injectStyle (ssrContext) {
   if (disposed) return
   __webpack_require__(556)
 }
-var normalizeComponent = __webpack_require__(4)
+var normalizeComponent = __webpack_require__(7)
 /* script */
 var __vue_script__ = __webpack_require__(561)
 /* template */
@@ -89435,7 +89434,7 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(4)
+var normalizeComponent = __webpack_require__(7)
 /* script */
 var __vue_script__ = __webpack_require__(564)
 /* template */
@@ -89602,10 +89601,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             //endpoint: location.pathname + '/replies'
         };
     },
-    created: function created() {
+    mounted: function mounted() {
         this.fetch();
     },
 
+
+    //created() {
+    //    this.fetch();
+    //},
 
     methods: {
         fetch: function fetch(page) {
@@ -92213,7 +92216,7 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(4)
+var normalizeComponent = __webpack_require__(7)
 /* script */
 var __vue_script__ = __webpack_require__(579)
 /* template */
@@ -92417,7 +92420,7 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(4)
+var normalizeComponent = __webpack_require__(7)
 /* script */
 var __vue_script__ = __webpack_require__(582)
 /* template */
@@ -92571,7 +92574,7 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(4)
+var normalizeComponent = __webpack_require__(7)
 /* script */
 var __vue_script__ = __webpack_require__(585)
 /* template */
@@ -92660,8 +92663,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     data: function data() {
         return {
-            //avatar: '/storage/' + this.user.avatar_path,
-            avatar: this.user.avatar_path
+            avatar: '/storage/' + this.user.avatar_path
         };
     },
 
@@ -92702,7 +92704,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(4)
+var normalizeComponent = __webpack_require__(7)
 /* script */
 var __vue_script__ = __webpack_require__(587)
 /* template */
@@ -92767,11 +92769,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             reader.onload = function (e) {
                 //console.log(e);
                 var src = e.target.result;
-                //this.$emit('loaded', {
-                //    src: e.target.result,
-                //    file: avatar
-                //});
-                _this.$emit('loaded', { src: src, avatar: avatar });
+                _this.$emit('loaded', {
+                    src: e.target.result,
+                    file: avatar
+                });
+                //this.$emit('loaded', { src, avatar });
                 //this.avatar = e.target.result;
             };
         }
@@ -92811,6 +92813,11 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", [
     _c("div", { staticClass: "level" }, [
+      _c("img", {
+        staticClass: "mr-1",
+        attrs: { src: _vm.avatar, width: "50", height: "50" }
+      }),
+      _vm._v(" "),
       _c("h1", [
         _vm._v("\n            " + _vm._s(_vm.user.name) + "\n            "),
         _c("small", { domProps: { textContent: _vm._s(_vm.user.reputation) } }),
@@ -92848,7 +92855,7 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(4)
+var normalizeComponent = __webpack_require__(7)
 /* script */
 var __vue_script__ = __webpack_require__(591)
 /* template */
@@ -92999,95 +93006,6 @@ if (false) {
 
 /***/ }),
 /* 595 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(4)
-/* script */
-var __vue_script__ = __webpack_require__(596)
-/* template */
-var __vue_template__ = __webpack_require__(597)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/components/HtmlRenderer.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-7fe66c45", Component.options)
-  } else {
-    hotAPI.reload("data-v-7fe66c45", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 596 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-  props: {
-    toRender: {
-      type: String,
-      required: true
-    }
-  }
-});
-
-/***/ }),
-/* 597 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("span", { domProps: { innerHTML: _vm._s(this.toRender) } })
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-7fe66c45", module.exports)
-  }
-}
-
-/***/ }),
-/* 598 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin

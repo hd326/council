@@ -37,9 +37,13 @@
             }
         },
 
-        created() {
+        mounted() {
             this.fetch();
         },
+
+        //created() {
+        //    this.fetch();
+        //},
 
         methods: {
             fetch(page) {

@@ -23,7 +23,7 @@
 
         created() {
             if (this.message) {
-                this.flash(/*this.message*/);
+                this.flash();
             }
 
             window.events.$on('flash', message => {
@@ -55,6 +55,5 @@
         position: fixed;
         right: 25px;
         bottom: 25px;
-
     }
 </style>

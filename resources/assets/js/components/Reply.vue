@@ -113,7 +113,6 @@
                     .catch(error => {
                         flash(error.response.data, 'danger');
                     });
-                //whats up with this update method
                 this.editing = false;
 
                 flash('Updated!');

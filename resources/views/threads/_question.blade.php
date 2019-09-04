@@ -36,7 +36,7 @@
     <div class="panel-heading">
         <div class="level">
             {{--@if($thread->creator->avatar_path)--}}
-            {{--<img src="/storage/{{ $thread->creator->avatar_path }}" width="25" height="25" class="mr-1">--}}
+            <img src="/storage/{{ $thread->creator->avatar_path }}" width="25" height="25" class="mr-1">
             {{--@endif--}}
             <span class="flex"><a
                     href="{{ route('profile', $thread->creator->name) }}">{{ $thread->creator->name }} ({{ $thread->creator->reputation }} XP)</a>

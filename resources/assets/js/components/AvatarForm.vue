@@ -2,7 +2,7 @@
     <div>
 
         <div class="level">
-            <!--<img :src="avatar" width="50" height="50" class="mr-1">-->
+            <img :src="avatar" width="50" height="50" class="mr-1">
             <h1>
                 {{ user.name }}
                 <small v-text="user.reputation"></small><small>XP</small>
@@ -37,8 +37,7 @@
 
         data() {
             return {
-                //avatar: '/storage/' + this.user.avatar_path,
-                avatar: this.user.avatar_path,
+                avatar: '/storage/' + this.user.avatar_path,
             };
         },
 
