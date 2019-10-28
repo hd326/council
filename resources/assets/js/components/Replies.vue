@@ -27,7 +27,6 @@
         },
         // replies takes in $thread->reply
         // reply takes in data from replies data object
-        // 
         data() {
             return {
                 //items: this.data,

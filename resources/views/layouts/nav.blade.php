@@ -1,4 +1,4 @@
-<nav class="navbar navbar-default navbar-static-top">
+<nav class="navbar navbar-default navbar-static-top" role="navigation">
         <div class="container">
             <div class="navbar-header">
 
@@ -22,10 +22,9 @@
                 <ul class="nav navbar-nav">
                     <li><a href="/threads/create">New Thread</a></li>
 
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
-                            aria-haspopup="true" aria-expanded="false">Browse <span class="caret"></span></a>
-                        <ul class="dropdown-menu">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Browse <span class="caret"></span></a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <li><a href="/threads/">All Threads</a></li>
 
                             @if (auth()->check())
@@ -37,10 +36,10 @@
                             <li><a href="/threads?unanswered=1">Unanswered Threads</a></li>
                         </ul>
                     </li>
+                    
 
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
-                            aria-haspopup="true" aria-expanded="false">Channel <span class="caret"></span></a>
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Channel <span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             @foreach ($channels as $channel)
                             <li><a href="/threads/{{ $channel->slug }}">{{ $channel->name }}</a></li>
@@ -59,9 +58,9 @@
 
                     <user-notifications></user-notifications>
 
-                    @if (Auth::user()->isAdmin())
+                    {{-- @if (Auth::user()->isAdmin())
                     <li><a href="/admin"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span></a></li>
-                    @endif
+                    @endif --}}
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
                             aria-expanded="false" aria-haspopup="true" v-pre>
